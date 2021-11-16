@@ -1,9 +1,7 @@
 import { getAuth } from "firebase/auth";
 import {
   getFirestore,
-  doc,
   collection,
-  getDocs,
   query,
   orderBy,
   limit,
@@ -21,6 +19,9 @@ import { useState, useRef } from "react";
 
 import "./App.css";
 
+// TODOS
+// Fix authentication rules in console - https://stackoverflow.com/questions/46590155/firestore-permission-denied-missing-or-insufficient-permissions
+
 const firebaseConfig = {
   apiKey: "AIzaSyCqGKpji6dP_UW7PrDv-w-7EMxJlZg5YVw",
   authDomain: "chat-app-89f55.firebaseapp.com",
@@ -30,7 +31,7 @@ const firebaseConfig = {
   appId: "1:308398097216:web:2bb3f60054505f05a6f0a5",
 };
 
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 
@@ -48,16 +49,10 @@ export default function App(): JSX.Element {
 
 function ChatRoom(): JSX.Element {
   const [formValue, setFormValue] = useState("");
-  // const messagesRef = doc(firestore, "messages"));
-  // const query = messagesRef.orderBy("createdAt").limit(25);
 
-  const querySnapshot = getDocs(collection(db, "messages"));
-  const messages = querySnapshot;
-  // .forEach((msg: any) => {
-  //   console.log(msg.id, " => ", msg.data());
-  // });
-
-  // const [messages] = useCollectionData(query, { idField: "id" });
+  const messagesRef = collection(db, "messages");
+  const q = query(messagesRef, orderBy("createdAt"), limit(25));
+  const [messages] = useCollectionData(q, { idField: "id" });
 
   const dummy: any = useRef();
 
@@ -65,7 +60,6 @@ function ChatRoom(): JSX.Element {
     e.preventDefault();
     if (auth.currentUser) {
       const { uid, photoURL } = auth.currentUser;
-      // const newMessageRef =
       await addDoc(collection(db, "messages"), {
         text: formValue,
         createdAt: serverTimestamp(),
@@ -82,10 +76,15 @@ function ChatRoom(): JSX.Element {
     <>
       <main>
         <div>
-          {/* {messages &&
+          {messages &&
             messages.map((msg) => (
-              <ChatMessage key={msg.id} message={msg.text} />
-            ))} */}
+              <ChatMessage
+                key={msg.id}
+                text={msg.text}
+                photoURL={msg.photoURL}
+                userId={msg.uid}
+              />
+            ))}
         </div>
         <div ref={dummy}></div>
       </main>
@@ -93,26 +92,43 @@ function ChatRoom(): JSX.Element {
         <input
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
+          placeholder="Write your message..."
         />
-        <button type="submit">Send</button>
+        <button type="submit" disabled={!formValue}>
+          Send
+        </button>
       </form>
     </>
   );
 }
 
 interface ChatMessageProps {
-  message: { text: string; uid: string; photoURL: string };
+  text: string;
+  userId: string;
+  photoURL: string;
 }
 
 function ChatMessage(props: ChatMessageProps): JSX.Element {
-  const { text, uid, photoURL } = props.message;
-
-  // const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
+  const { text, userId, photoURL } = props;
+  console.log(photoURL);
 
   return (
-    <div className={`message`}>
-      <img src={photoURL} />
-      <p>{text}</p>
-    </div>
+    <>
+      {auth.currentUser && (
+        <div
+          className={`message ${
+            userId === auth.currentUser.uid ? "sent" : "received"
+          }`}
+        >
+          <img
+            src={
+              photoURL ||
+              "https://api.adorable.io/avatars/23/abott@adorable.png"
+            }
+          />
+          <p>{text}</p>
+        </div>
+      )}
+    </>
   );
 }
