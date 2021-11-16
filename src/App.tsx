@@ -39,10 +39,21 @@ export default function App(): JSX.Element {
   const [user] = useAuthState(auth);
   return (
     <div className="App">
-      <header>
-        <SignOut />
-      </header>
-      <section>{user ? <ChatRoom /> : <SignIn />}</section>
+      {!user && (
+        <section className="SignInView">
+          <SignIn />
+        </section>
+      )}
+      {user && (
+        <div className="SignedInView">
+          <header>
+            <SignOut />
+          </header>
+          <section>
+            <ChatRoom />
+          </section>
+        </div>
+      )}
     </div>
   );
 }

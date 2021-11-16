@@ -1,4 +1,5 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import GoogleButton from "react-google-button";
 const provider = new GoogleAuthProvider();
 
 export default function SignIn(): JSX.Element {
@@ -18,8 +19,8 @@ export default function SignIn(): JSX.Element {
       });
   };
   return (
-    <button onClick={signInWithGoogle} className="sign-in">
-      Sign in with Google
-    </button>
+    <>
+      <GoogleButton onClick={signInWithGoogle} className="sign-in" />
+    </>
   );
 }
