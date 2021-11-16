@@ -23,7 +23,7 @@ code {
 
 .App {
   text-align: center;
-  max-width: 728px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -34,7 +34,7 @@ code {
   color: white;
   position: fixed;
   width: 100%;
-  max-width: 728px;
+  max-width: 600px;
   top: 0;
   display: flex;
   align-items: center;
@@ -79,7 +79,7 @@ form {
   bottom: 0;
   background-color: rgb(24, 23, 23);
   width: 100%;
-  max-width: 728px;
+  max-width: 600px;
   display: flex;
   font-size: 1.5rem;
 }
@@ -122,8 +122,13 @@ button:disabled {
   background: white;
   max-width: 400px;
   margin: 0 auto;
+  border-radius: 20px;
 }
 
+.sign-out {
+  border-radius: 20px;
+  padding: 8px;
+}
 ul,
 li {
   text-align: left;
@@ -151,8 +156,8 @@ p {
 }
 
 .sent p {
-  color: white;
-  background: #0b93f6;
+  color: black;
+  background: #f2cc8f;
   align-self: flex-end;
 }
 .received p {
@@ -163,6 +168,7 @@ p {
 img {
   width: 40px;
   height: 40px;
+  border: 1px white solid;
   border-radius: 50%;
   margin: 2px 5px;
 }
