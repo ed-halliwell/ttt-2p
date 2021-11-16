@@ -1,3 +1,11 @@
+/* 
+#3D405B - dark blue
+#E07A5F - terracotta
+#F4F1DE - eggshell
+#81B29A - mint green
+#F2CC8F - deep champagne
+ */
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -5,7 +13,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #282c34;
+  background-color: #3d405b;
 }
 
 code {
@@ -20,7 +28,7 @@ code {
 }
 
 .App header {
-  background-color: #181717;
+  background-color: #81b29a;
   height: 10vh;
   min-height: 50px;
   color: white;
@@ -78,7 +86,7 @@ form {
 
 form button {
   width: 20%;
-  background-color: rgb(56, 56, 143);
+  background-color: #81b29a;
 }
 
 input {

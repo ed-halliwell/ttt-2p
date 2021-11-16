@@ -54,7 +54,7 @@ function ChatRoom(): JSX.Element {
   const q = query(messagesRef, orderBy("createdAt"), limit(25));
   const [messages] = useCollectionData(q, { idField: "id" });
 
-  const dummy: any = useRef();
+  const dummy = useRef<HTMLDivElement>(null);
 
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,7 +69,9 @@ function ChatRoom(): JSX.Element {
     }
 
     setFormValue("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+    if (null !== dummy.current) {
+      dummy.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -110,7 +112,6 @@ interface ChatMessageProps {
 
 function ChatMessage(props: ChatMessageProps): JSX.Element {
   const { text, userId, photoURL } = props;
-  console.log(photoURL);
 
   return (
     <>
@@ -125,6 +126,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
               photoURL ||
               "https://api.adorable.io/avatars/23/abott@adorable.png"
             }
+            alt={userId}
           />
           <p>{text}</p>
         </div>
