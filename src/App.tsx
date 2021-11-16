@@ -7,6 +7,8 @@ import {
   query,
   orderBy,
   limit,
+  addDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -59,18 +61,22 @@ function ChatRoom(): JSX.Element {
 
   const dummy: any = useRef();
 
-  // const sendMessage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   e.preventDefault();
-  //   const { uid, photoURL } = auth.currentUser;
-  //   await messagesRef.add({
-  //     text: formValue,
-  //     createdAt: db.serverTimestamp(),
-  //     uid,
-  //     photoURL,
-  //   });
-  //   setFormValue("");
-  //   dummy.current.scrollIntoView({ behavior: "smooth" });
-  // };
+  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (auth.currentUser) {
+      const { uid, photoURL } = auth.currentUser;
+      // const newMessageRef =
+      await addDoc(collection(db, "messages"), {
+        text: formValue,
+        createdAt: serverTimestamp(),
+        uid,
+        photoURL,
+      });
+    }
+
+    setFormValue("");
+    dummy.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
@@ -83,7 +89,7 @@ function ChatRoom(): JSX.Element {
         </div>
         <div ref={dummy}></div>
       </main>
-      <form>
+      <form onSubmit={sendMessage}>
         <input
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
