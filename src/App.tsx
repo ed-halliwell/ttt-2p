@@ -40,19 +40,26 @@ export default function App(): JSX.Element {
   return (
     <div className="App">
       {!user && (
-        <section className="SignInView">
-          <SignIn />
-        </section>
+        <>
+          <section className="SignInView">
+            <header>
+              <h1 className="AppTitle">CHAT!</h1>
+            </header>
+            <SignIn />
+            <footer>© Ed Halliwell, 2021</footer>
+          </section>
+        </>
       )}
       {user && (
-        <div className="SignedInView">
-          <header>
-            <SignOut />
-          </header>
-          <section>
+        <>
+          <section className="SignedInView">
+            <header>
+              <h1 className="AppTitle">CHAT!</h1>
+              <SignOut />
+            </header>
             <ChatRoom />
           </section>
-        </div>
+        </>
       )}
     </div>
   );
