@@ -44,7 +44,12 @@ export default function Lobby(props: LobbyProps): JSX.Element {
           name: null,
         },
         createdAt: Math.round(new Date().getTime() / 1000),
-        board: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+        board: JSON.stringify([
+          [1, 1, 1],
+          [1, 1, 1],
+          [1, 1, 1],
+        ]),
+        player1Turn: true,
       });
       props.handleSetRoomId(id);
     }
@@ -58,12 +63,8 @@ export default function Lobby(props: LobbyProps): JSX.Element {
     try {
       const roomRef = doc(db, "rooms", `${roomId}`);
       const snap = await getDoc(roomRef);
-      if (snap.exists()) {
-        console.log(snap.data());
-      } else {
-        console.log("No such document");
-      }
-      if (auth.currentUser) {
+
+      if (snap.exists() && auth.currentUser) {
         const { uid } = auth.currentUser;
         await updateDoc(roomRef, {
           player2: {
@@ -74,7 +75,6 @@ export default function Lobby(props: LobbyProps): JSX.Element {
       }
       console.log("You made it to joining a room", roomId);
     } catch (error) {
-      //   console.log(error);
       alert("No such room! Please eneter a valid Room ID");
     }
     setLoading(false);
