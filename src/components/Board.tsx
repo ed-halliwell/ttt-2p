@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 
 import BoardText from "./BoardText";
@@ -20,15 +20,18 @@ export default function Board(props: BoardProps): JSX.Element {
     [1, 1, 1],
   ]);
 
-  const db = getFirestore();
-
-  const getGameData = async () => {
-    const roomRef = doc(db, "rooms", `${props.roomId}`);
-    const snap = await getDoc(roomRef);
-    const gameData = snap.data();
-    setBoard(JSON.parse(gameData?.board));
-  };
-  getGameData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    console.log("UseEffect is firing...");
+    const fetchData = async () => {
+      const db = getFirestore();
+      const roomRef = doc(db, "rooms", `${props.roomId}`);
+      const snap = await getDoc(roomRef);
+      const gameData = snap.data();
+      setBoard(JSON.parse(gameData?.board));
+    };
+    fetchData();
+  });
 
   const createNewBoard = (): void => {
     setPlayer1Turn(true);
