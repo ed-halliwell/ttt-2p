@@ -21,8 +21,6 @@ interface LobbyProps {
 }
 
 export default function Lobby(props: LobbyProps): JSX.Element {
-  const [loading, setLoading] = useState<boolean>(false);
-
   const db = getFirestore();
   const auth = getAuth();
 
@@ -32,11 +30,11 @@ export default function Lobby(props: LobbyProps): JSX.Element {
 
   const createNewRoom = async () => {
     const player1Name = prompt("What is your name?") || "";
-    if (auth.currentUser) {
-      const { uid } = auth.currentUser;
+
+    if (auth.currentUser && player1Name !== "") {
       const { id } = await addDoc(collection(db, "rooms"), {
         player1: {
-          id: uid,
+          id: auth.currentUser.uid,
           name: player1Name,
         },
         player2: {
@@ -59,7 +57,6 @@ export default function Lobby(props: LobbyProps): JSX.Element {
     const roomId = prompt("Please enter a Room ID") || "";
     const player2Name = prompt("What is your name?") || "";
 
-    setLoading(true);
     try {
       const roomRef = doc(db, "rooms", `${roomId}`);
       const snap = await getDoc(roomRef);
@@ -72,20 +69,25 @@ export default function Lobby(props: LobbyProps): JSX.Element {
             name: player2Name,
           },
         });
+        props.handleSetRoomId(roomId);
       }
       console.log("You made it to joining a room", roomId);
     } catch (error) {
       alert("No such room! Please eneter a valid Room ID");
     }
-    setLoading(false);
   };
 
   return (
     <>
-      <button onClick={createNewRoom}>Create New Room</button>
-      <button onClick={joinRoom}>Join Room</button>
-      {loading && <p>Loading...</p>}
-      {rooms?.map((room) => (
+      <section className="ButtonGroup">
+        <button className="LobbyButton" onClick={createNewRoom}>
+          Create New Room
+        </button>
+        <button className="LobbyButton" onClick={joinRoom}>
+          Join Room
+        </button>
+      </section>
+      {/* {rooms?.map((room) => (
         <ul key={room.id}>
           <li>Room Id: {room.id}</li>
           <li>Player 1 Id: {room.player1.id}</li>
@@ -95,7 +97,7 @@ export default function Lobby(props: LobbyProps): JSX.Element {
           <li>Created At: {room.createdAt}</li>
           <li>Room Board: {room.board}</li>
         </ul>
-      ))}
+      ))} */}
     </>
   );
 }

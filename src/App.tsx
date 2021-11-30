@@ -4,8 +4,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
+import Header from "./components/Header";
 import SignIn from "./components/SignIn";
-import SignOut from "./components/SignOut";
 import Lobby from "./components/Lobby";
 import Board from "./components/Board";
 
@@ -25,7 +25,7 @@ const auth = getAuth();
 
 export default function App(): JSX.Element {
   const [user] = useAuthState(auth);
-  const [selectedRoomId, setSelectedRoomId] = useState<string>("");
+  const [selectedRoomId, setSelectedRoomId] = useState<string>("123");
 
   const setRoomId = (roomId: string): void => {
     setSelectedRoomId(roomId);
@@ -33,31 +33,23 @@ export default function App(): JSX.Element {
 
   return (
     <div className="App">
-      {!user && selectedRoomId === "" && (
+      <Header signedInUser={user} />
+      {!user && !selectedRoomId && (
         <section className="SignInView">
-          <header>
-            <h1 className="AppTitle">TicTacToe</h1>
-          </header>
           <SignIn />
           <footer>© Ed Halliwell, 2021</footer>
         </section>
       )}
-      {user && selectedRoomId === "" && (
-        <section className="SignedInView">
-          <header>
-            <h1 className="AppTitle">TicTacToe</h1>
-            <SignOut />
-          </header>
+
+      {user && !selectedRoomId && (
+        <section className="Lobby">
           <Lobby handleSetRoomId={setRoomId} />
         </section>
       )}
+
       {user && selectedRoomId && (
-        <section className="SignedInView">
-          <header>
-            <h1 className="AppTitle">TicTacToe</h1>
-            <SignOut />
-          </header>
-          <Board roomId={selectedRoomId} />
+        <section className="GameRoomView">
+          <Board roomId={selectedRoomId} handleSetRoomId={setRoomId} />
         </section>
       )}
     </div>

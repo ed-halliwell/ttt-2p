@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
 
 import BoardText from "./BoardText";
 import Square from "./Square";
@@ -8,9 +8,11 @@ import "../styles/Board.css";
 
 interface BoardProps {
   roomId: string;
+  handleSetRoomId: (roomId: string) => void;
 }
 
 export default function Board(props: BoardProps): JSX.Element {
+  const db = getFirestore();
   const [player1Turn, setPlayer1Turn] = useState<boolean>(true);
   const [noughtsWin, setNoughtsWin] = useState<boolean>(false);
   const [crossesWin, setCrossesWin] = useState<boolean>(false);
@@ -33,16 +35,16 @@ export default function Board(props: BoardProps): JSX.Element {
     fetchData();
   });
 
-  const createNewBoard = (): void => {
-    setPlayer1Turn(true);
-    setNoughtsWin(false);
-    setCrossesWin(false);
-    setBoard([
-      [1, 1, 1],
-      [1, 1, 1],
-      [1, 1, 1],
-    ]);
-  };
+  // const createNewBoard = (): void => {
+  //   setPlayer1Turn(true);
+  //   setNoughtsWin(false);
+  //   setCrossesWin(false);
+  //   setBoard([
+  //     [1, 1, 1],
+  //     [1, 1, 1],
+  //     [1, 1, 1],
+  //   ]);
+  // };
 
   const takeTurn = (coord: string) => {
     const [y, x] = coord.split("-").map(Number);
@@ -55,6 +57,15 @@ export default function Board(props: BoardProps): JSX.Element {
     setPlayer1Turn(!player1Turn);
     setNoughtsWin(checkNoughtsWin(board));
     setCrossesWin(checkCrossesWin(board));
+
+    const updateBoardOnDb = async (gameBoard: number[][]) => {
+      const stringifiedBoard = JSON.stringify(gameBoard);
+      const roomRef = doc(db, "rooms", `${props.roomId}`);
+      await updateDoc(roomRef, {
+        board: stringifiedBoard,
+      });
+    };
+    updateBoardOnDb(board);
   };
 
   const renderBoard = () => {
@@ -79,20 +90,23 @@ export default function Board(props: BoardProps): JSX.Element {
 
   return (
     <div className="Board-container">
-      <h1 className="Board-header">TicTacToe</h1>
-      <div>
-        <table className="Board">
-          {(noughtsWin || crossesWin) && <div className="overlay"></div>}
-          <tbody>{renderBoard()}</tbody>
-        </table>
+      <div className="Board-text">
+        <BoardText
+          player1Turn={player1Turn}
+          noughtsWin={noughtsWin}
+          crossesWin={crossesWin}
+        />
       </div>
-      <BoardText
-        player1Turn={player1Turn}
-        noughtsWin={noughtsWin}
-        crossesWin={crossesWin}
-      />
-      <button className="Board-reset" onClick={createNewBoard}>
+      <table className="Board-table">
+        {(noughtsWin || crossesWin) && <div className="overlay"></div>}
+        <tbody>{renderBoard()}</tbody>
+      </table>
+
+      {/* <button className="Board-reset" onClick={createNewBoard}>
         New Game
+      </button> */}
+      <button className="Board-reset" onClick={() => props.handleSetRoomId("")}>
+        Leave Room
       </button>
     </div>
   );

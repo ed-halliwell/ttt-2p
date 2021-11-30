@@ -1,16 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap");
-.Board {
-  margin: 0 auto;
+.Board-container {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.Board-table {
+  margin: 2rem auto;
   border-spacing: 0;
   border-collapse: collapse;
   padding: 0;
   display: flex;
   width: 15rem;
-}
-
-.Board-header {
-  font-family: "Bungee Shade", cursive;
-  width: 100%;
 }
 
 table {
@@ -23,20 +26,21 @@ td {
   border: none;
 }
 
-.Board-container {
-  border: 1px solid rgb(35, 48, 82);
-  padding: 1rem 2rem;
-}
-
 .Board-reset {
+  font-size: 1rem;
+  margin-top: 2rem;
   outline: none;
   border: 0;
-  width: 80%;
+  width: 50%;
   height: 2rem;
-  background-color: rgb(52, 73, 128);
+  background-color: #0d47a1;
   border-radius: 5px;
   color: white;
   cursor: pointer;
+}
+
+.Board-reset:hover {
+  background-color: #063883;
 }
 
 .Board-turntext {

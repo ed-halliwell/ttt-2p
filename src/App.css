@@ -1,28 +1,8 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: white;
-  height: 100vh;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
 .App {
   max-width: 30vw;
   margin: auto;
-}
-
-.AppTitle {
-  font-family: "Permanent Marker", cursive;
-  font-size: 2rem;
-  padding: 0 0.5rem;
+  background-color: #e3f2fd;
+  height: 100vh;
 }
 
 .SignInView {
@@ -36,9 +16,12 @@ code {
   position: absolute;
 }
 
-.sign-in {
-  margin: auto;
-  align-self: center;
+.GameRoomView {
+  top: 8vh;
+  background-color: #e3f2fd;
+  min-width: 500px;
+  height: 92vh;
+  position: absolute;
 }
 
 footer {
@@ -46,153 +29,4 @@ footer {
   margin: 0 auto;
   height: 4vh;
   line-height: 4vh;
-}
-
-.SignedInView {
-  top: 10vh;
-  background-color: #e3f2fd;
-  min-width: 500px;
-  height: 80vh;
-  position: absolute;
-}
-
-header {
-  background-color: #0d47a1;
-  height: 8vh;
-  min-height: 40px;
-  color: white;
-  width: 100%;
-  min-width: 500px;
-  display: flex;
-  align-items: center;
-
-  justify-content: space-between;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.sign-out {
-  background-color: transparent;
-  border: none;
-  color: white;
-  padding: 8px 8px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.sign-out:hover {
-  color: rgb(228, 228, 228);
-}
-
-.App section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
-  background-color: #e3f2fd;
-}
-
-main {
-  padding: 10px;
-  height: 64vh;
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-}
-
-main::-webkit-scrollbar {
-  width: 0.25rem;
-}
-
-main::-webkit-scrollbar-track {
-  background: #cfd8dc;
-}
-
-main::-webkit-scrollbar-thumb {
-  background: #263238;
-}
-
-form {
-  align-self: flex-end;
-  height: 8vh;
-  background-color: #66bb6a;
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  font-size: 1.25rem;
-}
-
-form button {
-  width: 8vw;
-  color: white;
-  border: none;
-  background-color: #4caf50;
-  cursor: pointer;
-}
-
-form button:hover {
-  background-color: #43a047;
-}
-
-input {
-  width: 100%;
-  font-size: 1.25rem;
-  background: #fafafa;
-  outline: none;
-  border: none;
-  padding: 0 10px;
-  border: 1px solid #bdbdbd;
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-ul,
-li {
-  text-align: left;
-  list-style: none;
-}
-
-p {
-  max-width: 500px;
-  margin-bottom: 8px;
-  line-height: 20px;
-  padding: 8px 16px;
-  border-radius: 16px;
-  position: relative;
-  color: white;
-  text-align: center;
-  margin: auto 0;
-}
-
-.message {
-  display: flex;
-  align-items: center;
-}
-
-.sent {
-  flex-direction: row-reverse;
-}
-
-.sent p {
-  color: white;
-  background: #42a5f5;
-  align-self: flex-end;
-}
-.received p {
-  background: #fafafa;
-  color: black;
-}
-
-img {
-  width: 36px;
-  height: 36px;
-  border: 1px white solid;
-  border-radius: 50%;
-  margin: 4px 5px;
 }

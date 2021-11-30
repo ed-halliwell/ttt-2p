@@ -1,0 +1,33 @@
+.Lobby {
+  top: 8vh;
+  background-color: #e3f2fd;
+  min-width: 500px;
+  height: 92vh;
+  position: absolute;
+}
+
+.ButtonGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60%;
+  background-color: #e3f2fd;
+}
+
+.LobbyButton {
+  font-size: 1rem;
+  margin: 1rem 0;
+  outline: none;
+  border: 0;
+  width: 80%;
+  height: 2rem;
+  background-color: #0d47a1;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.LobbyButton:hover {
+  background-color: #063883;
+}

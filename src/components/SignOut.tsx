@@ -1,4 +1,5 @@
 import { getAuth } from "firebase/auth";
+import "../styles/SignOut.css";
 
 export default function SignOut(): JSX.Element {
   const auth = getAuth();
