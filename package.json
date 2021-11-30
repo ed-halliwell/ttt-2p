@@ -1,9 +1,12 @@
 {
-  "name": "academy-react-starter",
+  "name": "tictictoe-2player",
   "version": "0.1.0",
   "private": true,
   "license": "CC-BY-NC-ND-4.0",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/react-fontawesome": "^0.1.16",
     "firebase": "^9.4.1",
     "firestore": "^1.1.6",
     "react": "^17.0.2",

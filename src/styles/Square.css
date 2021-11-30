@@ -1,0 +1,19 @@
+.Square {
+  height: 4rem;
+  width: 4rem;
+  font-size: 3rem;
+  line-height: 4rem;
+  background-color: white;
+  display: inline-block;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  color: rgb(52, 73, 128);
+  cursor: pointer;
+}
+
+.fa-circle {
+  font-size: 2.5rem;
+}
