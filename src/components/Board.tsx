@@ -11,18 +11,35 @@ interface BoardProps {
   handleSetRoomId: (roomId: string) => void;
 }
 
+interface GameData {
+  id: string;
+  player1: {
+    id: string | null;
+    name: string | null;
+  };
+  player2: {
+    id: string | null;
+    name: string | null;
+  };
+  createdAt: number;
+  board: string;
+  player1Turn: boolean;
+}
+
 export default function Board(props: BoardProps): JSX.Element {
   const db = getFirestore();
   const [player1Turn, setPlayer1Turn] = useState<boolean>(true);
   const [noughtsWin, setNoughtsWin] = useState<boolean>(false);
   const [crossesWin, setCrossesWin] = useState<boolean>(false);
-  const [board, setBoard] = useState<number[][]>([
-    [1, 1, 1],
-    [1, 1, 1],
-    [1, 1, 1],
-  ]);
+  const [gameData, setGameData] = useState<GameData>();
+  // const [board, setBoard] = useState<number[][]>([
+  //   [1, 1, 1],
+  //   [1, 1, 1],
+  //   [1, 1, 1],
+  // ]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const board = gameData ? JSON.parse(gameData.board) : undefined;
+
   useEffect(() => {
     console.log("UseEffect is firing...");
     const fetchData = async () => {
@@ -30,10 +47,11 @@ export default function Board(props: BoardProps): JSX.Element {
       const roomRef = doc(db, "rooms", `${props.roomId}`);
       const snap = await getDoc(roomRef);
       const gameData = snap.data();
-      setBoard(JSON.parse(gameData?.board));
+      // setBoard(JSON.parse(gameData?.board));
+      // setGameData(gameData);
     };
     fetchData();
-  });
+  }, []);
 
   // const createNewBoard = (): void => {
   //   setPlayer1Turn(true);
