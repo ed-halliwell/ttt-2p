@@ -26,7 +26,7 @@ td {
   border: none;
 }
 
-.Board-reset {
+.Board-button {
   font-size: 1rem;
   margin-top: 2rem;
   outline: none;
@@ -39,7 +39,7 @@ td {
   cursor: pointer;
 }
 
-.Board-reset:hover {
+.Board-button:hover {
   background-color: #063883;
 }
 

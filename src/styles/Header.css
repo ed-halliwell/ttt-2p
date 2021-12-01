@@ -16,3 +16,14 @@ header {
   font-size: 2rem;
   padding: 0 0.5rem;
 }
+
+.LoginDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.signedInAs-label {
+  font-size: 0.8rem;
+  margin: 0;
+  padding: 0.25rem 0.5rem 0 0;
+}

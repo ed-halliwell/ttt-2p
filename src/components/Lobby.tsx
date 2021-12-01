@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { getAuth } from "firebase/auth";
 import {
   doc,
@@ -6,13 +6,13 @@ import {
   updateDoc,
   getFirestore,
   collection,
-  query,
-  orderBy,
-  limit,
+  // query,
+  // orderBy,
+  // limit,
   addDoc,
 } from "firebase/firestore";
 import "firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+// import { useCollectionData } from "react-firebase-hooks/firestore";
 
 import "../styles/Lobby.css";
 
@@ -25,8 +25,8 @@ export default function Lobby(props: LobbyProps): JSX.Element {
   const auth = getAuth();
 
   // List all the rooms, will remove later
-  const q = query(collection(db, "rooms"), orderBy("createdAt"), limit(25));
-  const [rooms] = useCollectionData(q, { idField: "id" });
+  // const q = query(collection(db, "rooms"), orderBy("createdAt"), limit(25));
+  // const [rooms] = useCollectionData(q, { idField: "id" });
 
   const createNewRoom = async () => {
     const player1Name = prompt("What is your name?") || "";
@@ -48,6 +48,7 @@ export default function Lobby(props: LobbyProps): JSX.Element {
           [1, 1, 1],
         ]),
         player1Turn: true,
+        winner: 1,
       });
       props.handleSetRoomId(id);
     }
@@ -87,17 +88,6 @@ export default function Lobby(props: LobbyProps): JSX.Element {
           Join Room
         </button>
       </section>
-      {/* {rooms?.map((room) => (
-        <ul key={room.id}>
-          <li>Room Id: {room.id}</li>
-          <li>Player 1 Id: {room.player1.id}</li>
-          <li>Player 1 Name: {room.player1.name}</li>
-          <li>Player 2 Id: {room.player2.id}</li>
-          <li>Player 2 Name: {room.player2.name}</li>
-          <li>Created At: {room.createdAt}</li>
-          <li>Room Board: {room.board}</li>
-        </ul>
-      ))} */}
     </>
   );
 }

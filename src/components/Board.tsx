@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
-
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { useDocument } from "react-firebase-hooks/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 import BoardText from "./BoardText";
 import Square from "./Square";
 import { checkCrossesWin, checkNoughtsWin } from "../utils/winConditions";
@@ -11,58 +12,64 @@ interface BoardProps {
   handleSetRoomId: (roomId: string) => void;
 }
 
-interface GameData {
-  id: string;
-  player1: {
-    id: string | null;
-    name: string | null;
-  };
-  player2: {
-    id: string | null;
-    name: string | null;
-  };
-  createdAt: number;
-  board: string;
-  player1Turn: boolean;
-}
+// interface GameData {
+//   id?: string;
+//   player1: {
+//     id: string | null;
+//     name: string | null;
+//   };
+//   player2: {
+//     id: string | null;
+//     name: string | null;
+//   };
+//   createdAt: number;
+//   board: string;
+//   player1Turn: boolean;
+//   winner: number;
+// }
 
 export default function Board(props: BoardProps): JSX.Element {
+  const auth = getAuth();
+  const [user] = useAuthState(auth);
+  const currentUserId = user ? user.uid : null;
+
+  // Fetching game data from server
   const db = getFirestore();
-  const [player1Turn, setPlayer1Turn] = useState<boolean>(true);
-  const [noughtsWin, setNoughtsWin] = useState<boolean>(false);
-  const [crossesWin, setCrossesWin] = useState<boolean>(false);
-  const [gameData, setGameData] = useState<GameData>();
-  // const [board, setBoard] = useState<number[][]>([
-  //   [1, 1, 1],
-  //   [1, 1, 1],
-  //   [1, 1, 1],
-  // ]);
+  const [value] = useDocument(doc(db, "rooms", `${props.roomId}`));
+  const roomData = value?.data();
+  const board = roomData
+    ? JSON.parse(roomData?.board)
+    : [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1],
+      ];
+  const player1Turn = roomData?.player1Turn;
+  const winner = roomData?.winner;
 
-  const board = gameData ? JSON.parse(gameData.board) : undefined;
+  const updateBoardOnDb = async (gameBoard: number[][]) => {
+    await updateDoc(doc(db, "rooms", `${props.roomId}`), {
+      board: JSON.stringify(gameBoard),
+    });
+  };
 
-  useEffect(() => {
-    console.log("UseEffect is firing...");
-    const fetchData = async () => {
-      const db = getFirestore();
-      const roomRef = doc(db, "rooms", `${props.roomId}`);
-      const snap = await getDoc(roomRef);
-      const gameData = snap.data();
-      // setBoard(JSON.parse(gameData?.board));
-      // setGameData(gameData);
-    };
-    fetchData();
-  }, []);
+  const updatePlayerTurnOnDb = async (player1Turn: boolean) => {
+    await updateDoc(doc(db, "rooms", `${props.roomId}`), {
+      player1Turn: player1Turn,
+    });
+  };
 
-  // const createNewBoard = (): void => {
-  //   setPlayer1Turn(true);
-  //   setNoughtsWin(false);
-  //   setCrossesWin(false);
-  //   setBoard([
-  //     [1, 1, 1],
-  //     [1, 1, 1],
-  //     [1, 1, 1],
-  //   ]);
-  // };
+  const updateWinnerOnDb = async (winnerValue: number) => {
+    if (winnerValue === 2) {
+      await updateDoc(doc(db, "rooms", `${props.roomId}`), {
+        winner: 2, // noughts are 2
+      });
+    } else if (winnerValue === 3) {
+      await updateDoc(doc(db, "rooms", `${props.roomId}`), {
+        winner: 3, // crosses are 3
+      });
+    }
+  };
 
   const takeTurn = (coord: string) => {
     const [y, x] = coord.split("-").map(Number);
@@ -71,18 +78,15 @@ export default function Board(props: BoardProps): JSX.Element {
       player1Turn ? (board[y][x] = 2) : (board[y][x] = 3);
     }
     updateSquare(y, x);
+    updatePlayerTurnOnDb(!player1Turn);
 
-    setPlayer1Turn(!player1Turn);
-    setNoughtsWin(checkNoughtsWin(board));
-    setCrossesWin(checkCrossesWin(board));
+    if (checkNoughtsWin(board)) {
+      updateWinnerOnDb(2);
+    }
+    if (checkCrossesWin(board)) {
+      updateWinnerOnDb(3);
+    }
 
-    const updateBoardOnDb = async (gameBoard: number[][]) => {
-      const stringifiedBoard = JSON.stringify(gameBoard);
-      const roomRef = doc(db, "rooms", `${props.roomId}`);
-      await updateDoc(roomRef, {
-        board: stringifiedBoard,
-      });
-    };
     updateBoardOnDb(board);
   };
 
@@ -106,24 +110,37 @@ export default function Board(props: BoardProps): JSX.Element {
     return tblBoard;
   };
 
+  const createNewBoard = (): void => {
+    updatePlayerTurnOnDb(true);
+    updateWinnerOnDb(1);
+    updateBoardOnDb([
+      [1, 1, 1],
+      [1, 1, 1],
+      [1, 1, 1],
+    ]);
+  };
+
   return (
     <div className="Board-container">
       <div className="Board-text">
-        <BoardText
-          player1Turn={player1Turn}
-          noughtsWin={noughtsWin}
-          crossesWin={crossesWin}
-        />
+        <BoardText player1Turn={player1Turn} winner={winner} />
       </div>
+      {currentUserId === roomData?.player1.id && (
+        <p>
+          hello! {roomData?.player1.name} {user?.email}
+        </p>
+      )}
+      {(winner === 2 || winner === 3) && <div className="overlay"></div>}
       <table className="Board-table">
-        {(noughtsWin || crossesWin) && <div className="overlay"></div>}
         <tbody>{renderBoard()}</tbody>
       </table>
-
-      {/* <button className="Board-reset" onClick={createNewBoard}>
+      <button className="Board-button" onClick={createNewBoard}>
         New Game
-      </button> */}
-      <button className="Board-reset" onClick={() => props.handleSetRoomId("")}>
+      </button>
+      <button
+        className="Board-button"
+        onClick={() => props.handleSetRoomId("")}
+      >
         Leave Room
       </button>
     </div>
