@@ -12,22 +12,6 @@ interface BoardProps {
   handleSetRoomId: (roomId: string) => void;
 }
 
-// interface GameData {
-//   id?: string;
-//   player1: {
-//     id: string | null;
-//     name: string | null;
-//   };
-//   player2: {
-//     id: string | null;
-//     name: string | null;
-//   };
-//   createdAt: number;
-//   board: string;
-//   player1Turn: boolean;
-//   winner: number;
-// }
-
 export default function Board(props: BoardProps): JSX.Element {
   const auth = getAuth();
   const [user] = useAuthState(auth);
@@ -120,16 +104,22 @@ export default function Board(props: BoardProps): JSX.Element {
     ]);
   };
 
+  const iAmPlayer1 = currentUserId === roomData?.player1.id;
+  const iAmPlayer2 = currentUserId === roomData?.player2.id;
+  console.log(value);
   return (
     <div className="Board-container">
       <div className="Board-text">
+        <strong>Room ID:</strong> {value?.id}
+      </div>
+      <div className="Board-text-helper">
+        <em> ^ Copy this ID and share with your friend!</em>
+      </div>
+      <div className="Board-text">
         <BoardText player1Turn={player1Turn} winner={winner} />
       </div>
-      {currentUserId === roomData?.player1.id && (
-        <p>
-          hello! {roomData?.player1.name} {user?.email}
-        </p>
-      )}
+      {iAmPlayer1 && !player1Turn && <div className="overlay"></div>}
+      {iAmPlayer2 && player1Turn && <div className="overlay"></div>}
       {(winner === 2 || winner === 3) && <div className="overlay"></div>}
       <table className="Board-table">
         <tbody>{renderBoard()}</tbody>

@@ -25,9 +25,7 @@ const auth = getAuth();
 
 export default function App(): JSX.Element {
   const [user] = useAuthState(auth);
-  const [selectedRoomId, setSelectedRoomId] = useState<string>(
-    "MUjLOyrrUmpKRqn7AOZs"
-  );
+  const [selectedRoomId, setSelectedRoomId] = useState<string>("");
 
   const setRoomId = (roomId: string): void => {
     setSelectedRoomId(roomId);

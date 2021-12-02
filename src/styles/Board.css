@@ -26,6 +26,10 @@ td {
   border: none;
 }
 
+.Board-text-helper {
+  font-size: 0.7rem;
+}
+
 .Board-button {
   font-size: 1rem;
   margin-top: 2rem;
@@ -49,6 +53,7 @@ td {
 
 .overlay {
   position: absolute;
+  margin-top: -24px;
   z-index: 1;
   background-color: rgb(52, 73, 128, 0.5);
   width: 12.5rem;

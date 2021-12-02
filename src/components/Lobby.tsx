@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { getAuth } from "firebase/auth";
 import {
   doc,
@@ -6,9 +5,6 @@ import {
   updateDoc,
   getFirestore,
   collection,
-  // query,
-  // orderBy,
-  // limit,
   addDoc,
 } from "firebase/firestore";
 import "firebase/firestore";
@@ -57,24 +53,26 @@ export default function Lobby(props: LobbyProps): JSX.Element {
   const joinRoom = async () => {
     const roomId = prompt("Please enter a Room ID") || "";
     const player2Name = prompt("What is your name?") || "";
+    if (roomId && player2Name) {
+      try {
+        const roomRef = doc(db, "rooms", `${roomId}`);
+        const snap = await getDoc(roomRef);
+        const roomData = snap.data();
 
-    try {
-      const roomRef = doc(db, "rooms", `${roomId}`);
-      const snap = await getDoc(roomRef);
-
-      if (snap.exists() && auth.currentUser) {
-        const { uid } = auth.currentUser;
-        await updateDoc(roomRef, {
-          player2: {
-            id: uid,
-            name: player2Name,
-          },
-        });
-        props.handleSetRoomId(roomId);
+        if (auth.currentUser && !roomData?.player2.id) {
+          const { uid } = auth.currentUser;
+          await updateDoc(roomRef, {
+            player2: {
+              id: uid,
+              name: player2Name,
+            },
+          });
+          props.handleSetRoomId(roomId);
+        }
+        console.log("You made it to joining a room", roomId);
+      } catch (error) {
+        alert("No room with that ID, or room is already full!");
       }
-      console.log("You made it to joining a room", roomId);
-    } catch (error) {
-      alert("No such room! Please eneter a valid Room ID");
     }
   };
 

@@ -2,8 +2,7 @@ header {
   background-color: #0d47a1;
   height: 8vh;
   color: white;
-  width: 100%;
-  min-width: 500px;
+  width: 500px;
   display: flex;
   align-items: center;
   justify-content: space-between;

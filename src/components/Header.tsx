@@ -17,9 +17,12 @@ export default function Header(props: HeaderProps): JSX.Element {
       <h1 className="App-header">TicTacToe</h1>
 
       <div className="LoginDetails">
-        <p className="signedInAs-label">
-          Signed in as: <strong>{user?.displayName}</strong>
-        </p>
+        {user && (
+          <p className="signedInAs-label">
+            Signed in as: <strong>{user?.displayName}</strong>
+          </p>
+        )}
+
         {props.signedInUser && <SignOut />}
       </div>
     </header>
